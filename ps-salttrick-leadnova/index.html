@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 10px;
+            margin: 0;
+        }
+        h2 {
+            margin: 20px 0;
+        }
+        .button {
+            background-color: green;
+            color: #fff;
+            padding: 15px 30px;
+            border: none;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            animation: pulse 1s infinite;
+            text-transform: uppercase;
+            margin: 20px 0;
+        }
+        .button:hover {
+            background-color: #28a745;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .countdown {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .countdown .count {
+            color: #FF0000;
+        }
+    </style>
+</head>
+<body>
+    <h2>Confirm Your Age To Watch:</h2>
+
+    <!-- Botão com parâmetros dinâmicos -->
+    <button class="button" id="dynamic-button">I'M OVER 21+</button>
+
+    <p class="countdown">Only <span class="count" id="spot-count">10</span> spots left to watch for free!</p>
+
+    <script>
+        // Extrair parâmetros da URL
+        function getQueryParams() {
+            const query = window.location.search.substring(1);
+            const params = {};
+            query.split('&').forEach(param => {
+                const [key, value] = param.split('=');
+                params[key] = decodeURIComponent(value || '');
+            });
+            return params;
+        }
+
+        // Construir URL com parâmetros dinâmicos
+        function buildDynamicLink() {
+            const params = getQueryParams();
+            const baseLink = "https://page.strongmenhealth.site/";
+            const queryString = new URLSearchParams(params).toString();
+            return `${baseLink}?${queryString}`;
+        }
+
+        // Atualizar botão dinamicamente
+        const dynamicButton = document.getElementById('dynamic-button');
+        dynamicButton.addEventListener('click', () => {
+            const dynamicLink = buildDynamicLink();
+            window.location.href = dynamicLink;
+        });
+
+        // Atualizar contagem de spots
+        let count = 10;
+
+        function decreaseCount() {
+            if (count > 3) {
+                let decrement = Math.floor(Math.random() * 2) + 1;
+                count -= decrement;
+                if (count < 3) count = 3;
+                document.getElementById('spot-count').textContent = count;
+
+                let nextTimeout = Math.floor(Math.random() * 1000) + 2000;
+                setTimeout(decreaseCount, nextTimeout);
+
+            } else if (count === 3) {
+                setTimeout(() => {
+                    count--;
+                    document.getElementById('spot-count').textContent = count;
+                }, 30000);
+            }
+        }
+
+        setTimeout(() => {
+            count = 9;
+            document.getElementById('spot-count').textContent = count;
+            setTimeout(decreaseCount, 2000);
+        }, 1000);
+    </script>
+</body>
+</html>
